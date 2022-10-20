@@ -5,7 +5,7 @@ import (
 	"os"
 )
 
-func Compile(filename string) int {
+func Execute(filename string) int {
 
 	fmt.Println("Compiler: start compile")
 

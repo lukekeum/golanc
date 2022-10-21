@@ -3,6 +3,9 @@ package compiler
 import (
 	"fmt"
 	"os"
+
+	"github.com/lukekeum/golanc/compiler/parser"
+	"github.com/lukekeum/golanc/token"
 )
 
 func Execute(filename string) int {
@@ -17,7 +20,16 @@ func Execute(filename string) int {
 
 	content := string(data[:])
 
-	Lexical(content)
+	var tokenStore []token.Token = []token.Token{}
+
+	// Lex Analyzer
+
+	Lexical(content, tokenStore)
+
+	// Parser
+	parser := parser.New(tokenStore)
+
+	parser.Init()
 
 	fmt.Println("Compiler: compile complete")
 

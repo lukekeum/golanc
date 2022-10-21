@@ -15,7 +15,9 @@ func Execute(filename string) int {
 		panic("Error occured while reading file")
 	}
 
-	fmt.Println(string(data)) // TODO: Add Compiler Section
+	content := string(data[:])
+
+	Lexical(content)
 
 	fmt.Println("Compiler: compile complete")
 

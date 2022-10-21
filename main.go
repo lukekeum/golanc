@@ -13,5 +13,9 @@ func main() {
 		panic("file name argument required")
 	}
 
-	compiler.Execute(fileName[1])
+	isError := compiler.Execute(fileName[1])
+
+	if isError != 0 {
+		panic("Something wrong")
+	}
 }

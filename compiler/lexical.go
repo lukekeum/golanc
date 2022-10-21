@@ -2,88 +2,104 @@ package compiler
 
 import (
 	"fmt"
+	"strconv"
+
+	"github.com/lukekeum/golanc/token"
 )
 
-func Lexical(content string) {
+func Lexical(content string, store []token.Token) {
 
 	for i := 0; i < len(content); i++ {
 		// 영문, 언어바 판별
+
 		if (content[i] >= 'A' && content[i] <= 'Z') || content[i] == '_' || (content[i] >= 'a' && content[i] <= 'z') {
-			fmt.Printf("Ident: %c", content[i])
+			value := ""
+			value += fmt.Sprintf("%c", content[i])
 
 			for true {
 				i += 1
 				if (content[i] >= 'A' && content[i] <= 'Z') || content[i] == '_' || (content[i] >= 'a' && content[i] <= 'z') {
-					fmt.Printf("%c", content[i])
+					value += fmt.Sprintf("%c", content[i])
 				} else {
 					break
 				}
 			}
-			fmt.Println()
+			store = append(store, *token.New(token.IDENT, value))
 		}
 
 		// 상수 판별
 		if content[i] >= '0' && content[i] <= '9' {
-			fmt.Printf("Constant: %c", content[i])
+			value := fmt.Sprintf("%c", content[i])
 
 			for true {
 				i += 1
 				if content[i] >= '0' && content[i] <= '9' {
-					fmt.Printf("%c", content[i])
+					value += fmt.Sprintf("%c", content[i])
 				} else {
 					break
 				}
 			}
-			fmt.Println()
+			value_int, _ := strconv.Atoi(value)
+
+			store = append(store, *token.New(token.CONST, value_int))
 		}
 
 		// 덧셈 연산자 판별
 		if content[i] == '+' {
-			fmt.Println("Operator: +")
+			store = append(store, *token.New(token.OPER, '+'))
 		}
 
 		// 뺄셈 연산자 판별
 		if content[i] == '-' {
-			fmt.Println("Operator: -")
+			store = append(store, *token.New(token.OPER, '-'))
 		}
 
 		// 곱셈 연산자 판별
 		if content[i] == '*' {
-			fmt.Println("Operator: *")
+			store = append(store, *token.New(token.OPER, '*'))
 		}
 
 		// 나눗셈 연삼자 판별
 		if content[i] == '/' {
-			fmt.Println("Operator: /")
+			store = append(store, *token.New(token.OPER, '/'))
 		}
 
 		// 치환 연산자 판별
 		if content[i] == '=' {
-			fmt.Println("Operator: =")
+			store = append(store, *token.New(token.OPER, '='))
 		}
 
 		// 구분자 판별
 		if content[i] == ';' {
-			fmt.Println("Seperator: ;")
+			store = append(store, *token.New(token.SEPER, ';'))
 		}
 
 		if content[i] == '(' {
-			fmt.Println("Seperator: (")
+			store = append(store, *token.New(token.SEPER, '('))
 		}
 
 		if content[i] == ')' {
-			fmt.Println("Seperator: )")
+			store = append(store, *token.New(token.SEPER, ')'))
+		}
+
+		if content[i] == '"' {
+			store = append(store, *token.New(token.SEPER, '"'))
+		}
+
+		if content[i] == '\'' {
+			store = append(store, *token.New(token.SEPER, '\''))
 		}
 
 		// 텍스트 판별
 		if content[i] == '"' {
-			fmt.Printf("String: ")
+			value := ""
+
 			i += 1
 			for content[i] != '"' {
-				fmt.Printf(string(content[i]))
+				value += fmt.Sprintf("%c", content[i])
 				i += 1
 			}
-			fmt.Println()
+			store = append(store, *token.New(token.STRING, value))
 		}
 
 		// /* */ 주석 판별
